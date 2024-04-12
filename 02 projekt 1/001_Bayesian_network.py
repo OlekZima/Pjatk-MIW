@@ -5,28 +5,34 @@ import numpy as np
 
 # deszczowy dzień (rainy day)
 # słoneczny dzień (sunny day)
-start = ["rainy day", "sunny day"]
+start = ['rainy day', 'sunny day']
 # Prawdopodobieństwo startu (Start probability)
 p_start = [0.2, 0.8]
 
-t1 = ["rainy day", "sunny day"]
+t1 = ['rainy day', 'sunny day']
 # Macierz przejść (Transition matrix)
 p_t1 = [[0.4, 0.6], [0.3, 0.7]]
 
-t2 = ["walk", "shop", "clean"]
+t2 = ['walk', 'shop', 'clean']
 # Macierz emisji (Emission matrix)
 p_t2 = [[0.1, 0.4, 0.5], [0.6, 0.3, 0.1]]
 
 state = np.random.choice(start, replace=True, p=p_start)
+'''
+Flaga replace=True w funkcji np.random.choice() oznacza,
+że losowanie będzie z powtórzeniami, czyli że każdy element może być wybrany więcej niż jeden raz.
+W przypadku, gdy replace=False, każdy element jest wybierany tylko raz,
+a następnie usuwany z puli dostępnych elementów.
+'''
 
 n = 10  # liczba iteracji od startu do czynności (number of iterations from Start to activity)
 for i in range(n):
     print(f"Today is {state}, so I should ", end="")
-    if state == "rainy day":
+    if state == 'rainy day':
         activity = np.random.choice(t2, p=p_t2[0])
         print(activity)
         state = np.random.choice(t1, p=p_t1[0])
-    elif state == "sunny day":
+    elif state == 'sunny day':
         activity = np.random.choice(t2, p=p_t2[1])
         print(activity)
         state = np.random.choice(t1, p=p_t1[1])
