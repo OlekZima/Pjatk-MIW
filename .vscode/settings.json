@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./01/03_",
+        "./01/03_"
+    ]
+}

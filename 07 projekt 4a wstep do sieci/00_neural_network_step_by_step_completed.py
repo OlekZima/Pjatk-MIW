@@ -12,8 +12,9 @@ class NeuralNetworkRegression:
         self.hidden_size = hidden_size
         self.output_size = output_size
         # Inicjalizacja wag dla warstwy wejściowej-ukrytej i ukrytej-wyjściowej
-        self.weights_input_hidden = np.random.randn(input_size, hidden_size)
-        self.weights_hidden_output = np.random.randn(hidden_size, output_size)
+        rg = np.random.default_rng(np.random.MT19937())
+        self.weights_input_hidden = rg.standard_normal((input_size, hidden_size))
+        self.weights_hidden_output = rg.standard_normal((hidden_size, output_size))
         # Inicjalizacja biasów dla warstwy ukrytej i wyjściowej
         self.bias_hidden = np.zeros(hidden_size)
         self.bias_output = np.zeros(output_size)
@@ -29,36 +30,36 @@ class NeuralNetworkRegression:
         # Pochodna funkcji aktywacji ReLU
         return np.where(x > 0, 1, np.where(x < 0, 0, 0.5))
     
-    def forward(self, X):
+    def forward(self, x_data):
         # Przekazanie sygnału przez sieć w kierunku przód
-        hidden_input = np.dot(X, self.weights_input_hidden) + self.bias_hidden
+        hidden_input = np.dot(x_data, self.weights_input_hidden) + self.bias_hidden
         hidden_output = self.relu(hidden_input)
         output_input = np.dot(hidden_output, self.weights_hidden_output) + self.bias_output
         return self.relu(output_input)
     
-    def backward(self, X, y, output, learning_rate, reg_lambda):
+    def backward(self, x_data, y_data, output, learning_rate, reg_lambda):
         # Propagacja wsteczna błędu przez sieć
-        output_error = y - output
-        hidden_output = self.relu(np.dot(X, self.weights_input_hidden) + self.bias_hidden)
+        output_error = y_data - output
+        hidden_output = self.relu(np.dot(x_data, self.weights_input_hidden) + self.bias_hidden)
         gradient_hidden_output = np.dot(hidden_output.T, output_error)
         hidden_error = np.dot(output_error, self.weights_hidden_output.T)
         hidden_error *= self.relu_derivative(hidden_output)
-        gradient_input_hidden = np.dot(X.T, hidden_error)
+        gradient_input_hidden = np.dot(x_data.T, hidden_error)
         # Aktualizacja wag i biasów
         self.weights_hidden_output += (gradient_hidden_output - reg_lambda * self.weights_hidden_output) * learning_rate
         self.weights_input_hidden += (gradient_input_hidden - reg_lambda * self.weights_input_hidden) * learning_rate
         self.bias_output += np.sum(output_error, axis=0) * learning_rate
         self.bias_hidden += np.sum(hidden_error, axis=0) * learning_rate
         
-    def train(self, X, y, epochs, learning_rate, reg_lambda):
+    def train(self, x_data, y_data, epochs, learning_rate, reg_lambda):
         # Trenowanie sieci neuronowej
         print("Start training neural networks")
         for epoch in range(1, epochs):
-            output = self.forward(X)
-            self.backward(X, y, output, learning_rate, reg_lambda)
+            output = self.forward(x_data)
+            self.backward(x_data, y_data, output, learning_rate, reg_lambda)
 
-            mse = mean_squared_error(y, output)
-            r2 = r2_score(y, output)
+            mse = mean_squared_error(y_data, output)
+            r2 = r2_score(y_data, output)
             self.history_mse.append(mse)
             self.history_r2.append(r2)
 
