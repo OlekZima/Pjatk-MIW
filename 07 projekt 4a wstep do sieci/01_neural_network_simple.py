@@ -4,7 +4,7 @@ from datetime import datetime
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-
+import time
 
 class NeuralNetworkRegression:
     def __init__(self, input_size, hidden_size, output_size) -> None:
@@ -66,7 +66,8 @@ class NeuralNetworkRegression:
             output = self.forward(X)
             self.backward(X, y, output, learning_rate, reg_lambda)
             if epoch % (epochs // 10) == 0:
-                print(f"[%] {epoch/epochs}")  # Wyświetlenie postępu procesu trenowania
+                print(f"Epoch {epoch}/{epochs} - MSE: {mse:.4f}, R2: {r2:.4f}")
+
             mse = mean_squared_error(y, output)
             r2 = r2_score(y, output)
             self.history_mse.append(mse)
@@ -78,9 +79,9 @@ class NeuralNetworkRegression:
 
 # Pobieranie aktualnej daty i godziny
 now = datetime.now()
-XX = 4
+XX = 7
 # Wczytanie danych z pliku
-with open(f"Dane/dane{XX}.txt", "r") as file:
+with open(f"data/dane{XX}.txt", "r") as file:
     data = file.readlines()
 
 # Przetwarzanie danych wejściowych i wyjściowych
