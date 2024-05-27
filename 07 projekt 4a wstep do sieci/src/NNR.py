@@ -51,6 +51,30 @@ class NeuralNetworkRegression:
     def relu_derivative(x_data: np.ndarray) -> np.ndarray:
         return (x_data >= 0).astype(int)
 
+    @staticmethod
+    def tanh(x_data: np.ndarray) -> np.ndarray:
+        return np.tanh(x_data)
+
+    @staticmethod
+    def tanh_derivative(x_data: np.ndarray) -> np.ndarray:
+        return 1 - np.tanh(x_data) ** 2
+
+    @staticmethod
+    def linear(x_data: np.ndarray) -> np.ndarray:
+        return x_data
+
+    @staticmethod
+    def linear_derivative(x_data: np.ndarray) -> np.ndarray:
+        return np.ones_like(x_data)
+
+    @staticmethod
+    def softplus(x_data: np.ndarray) -> np.ndarray:
+        return np.log(1 + np.exp(x_data))
+
+    @staticmethod
+    def softplus_derivative(x_data: np.ndarray) -> np.ndarray:
+        return 1 / (1 + np.exp(-x_data))
+
     def _pass_forward(self, x_data: np.ndarray) -> tuple:
         hidden_input = x_data @ self.weights_input_hidden + self.bias_hidden
         hidden_output: np.ndarray = self.activation_function(hidden_input)
