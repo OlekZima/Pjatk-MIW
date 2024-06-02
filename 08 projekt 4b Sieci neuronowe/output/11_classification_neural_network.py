@@ -31,13 +31,16 @@ model.compile(
     loss="binary_crossentropy",
     metrics=["binary_accuracy"],
 )
-
+early_stopping = keras.callbacks.EarlyStopping(
+    patience=10, min_delta=0.001, restore_best_weights=True
+)
 # Trenowanie modelu
-model.fit(
+history = model.fit(
     X_train,
     y_train,
     epochs=100,
     batch_size=32,
+    callbacks=[early_stopping],
     validation_data=(X_test, y_test),
 )
 
@@ -73,4 +76,11 @@ plt.title(
 plt.legend()
 # Wyświetlenie wykresu
 plt.tight_layout()
+plt.show()
+
+
+plt.figure(figsize=(8, 6))
+plt.plot(history.history["binary_accuracy"], label="train")
+plt.plot(history.history["val_binary_accuracy"], label="test")
+plt.legend()
 plt.show()
